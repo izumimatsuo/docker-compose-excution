@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  rundeck:
+    image: rundeck/rundeck:SNAPSHOT
+    container_name: rundeck
+    environment:
+      RUNDECK_DATABASE_DRIVER: org.postgresql.Driver
+      RUNDECK_DATABASE_USERNAME: rundeck
+      RUNDECK_DATABASE_PASSWORD: rundeck
+      RUNDECK_DATABASE_URL: jdbc:postgresql://rdb/rundeck
+      RUNDECK_GRAILS_URL: http://localhost:4440
+    volumes:
+      - ${RUNDECK_LICENSE_FILE:-/dev/null}:/home/rundeck/etc/rundeckpro-license.key
+      - ./rundeck/projects/:/home/rundeck/projects/
+      - ./rundeck/scripts:/home/rundeck/scripts/
+      - ./rundeck/.ssh:/home/rundeck/.ssh/
+    ports:
+      - 4440:4440
+
+  rdb:
+    image: postgres:9
+    container_name: rdb
+    environment:
+      POSTGRES_USER: rundeck
+      POSTGRES_PASSWORD: rundeck
+      POSTGRES_DB: rundeck
+    volumes:
+      - database:/var/lib/postgresql/data
+
+volumes:
+  database:
