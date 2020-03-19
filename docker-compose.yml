@@ -10,6 +10,9 @@ services:
       RUNDECK_DATABASE_PASSWORD: rundeck
       RUNDECK_DATABASE_URL: jdbc:postgresql://rdb/rundeck
       RUNDECK_GRAILS_URL: http://localhost:4440
+      RUNDECK_MAIL_SMTP_HOST: mail
+      RUNDECK_MAIL_SMTP_PORT: 1025
+      RUNDECK_MAIL_FROM: notifier@mail.example.com
     volumes:
       - ${RUNDECK_LICENSE_FILE:-/dev/null}:/home/rundeck/etc/rundeckpro-license.key
       - ./rundeck/projects/:/home/rundeck/projects/
@@ -27,6 +30,13 @@ services:
       POSTGRES_DB: rundeck
     volumes:
       - database:/var/lib/postgresql/data
+
+  mail:
+    image: schickling/mailcatcher
+    container_name: mail
+    ports:
+      - 1025:1025
+      - 1080:1080
 
 volumes:
   database:
